@@ -138,7 +138,7 @@ def get_tasks_markup(tg_done=False, kick_done=False, vk_done=False):
 
 
 def get_tasks_text(tg_done=False, kick_done=False, vk_done=False):
-    return f"""⚠️ Правила розыгрыша ⚠️
+    return f"""⚠️ Правила конкурса ⚠️
 
 👥 Участвовать могут только подписчики, выполнившие все три условия.
 📌 Репост должен быть активным и ДОСТУПНЫМ до конца конкурса.
@@ -164,13 +164,13 @@ def start_handler(message):
 
     markup = types.InlineKeyboardMarkup()
     btn = types.InlineKeyboardButton(
-        "🎉 Участвовать в розыгрыше", callback_data="participate"
+        "🎉 Участвовать в конкурсе", callback_data="participate"
     )
     markup.add(btn)
     text = (
         "🎉 Привет! Добро пожаловать в наш супер конкурс! 🎁\n\n"
         "Хотите выиграть крутые призы? Участвовать очень просто!\n"
-        "Нажимайте кнопку ниже и присоединяйтесь к розыгрышу прямо сейчас"
+        "Нажимайте кнопку ниже и присоединяйтесь к конкурсу прямо сейчас"
     )
     bot.send_message(message.chat.id, text, reply_markup=markup)
 
@@ -396,12 +396,12 @@ def callback_handler(call):
         ticket = row[0] if row and row[0] else None
         if ticket:
             text = (
-                f"🎉 Вы участвуете в розыгрыше!\n\n"
+                f"🎉 Вы участвуете в конкурсе!\n\n"
                 f"💰 Приз: 5000 рублей\n"
                 f"🏆 Победителей: 1\n"
                 f"🎫 Ваш билет: #{ticket}\n\n"
-                f"📅 Начало розыгрыша: 15.03.2026\n"
-                f"📅 Окончание: 30.03.2026 в 20:00 по Мск"
+                f"📅 Начало: 17.03.2026\n"
+                f"📅 Окончание: 30.03.2026 в 20:00 по МСК"
             )
         else:
             text = "❌ Билет не найден. Попробуйте снова через /start"
@@ -420,7 +420,7 @@ def callback_handler(call):
         participants = c.fetchall()
         conn.close()
         if participants:
-            text = "📋 УЧАСТНИКИ РОЗЫГРЫША:\n\n"
+            text = "📋 УЧАСТНИКИ КОНКУРСА:\n\n"
             for uid, uname, kick_uname, vk_link, ticket in participants:
                 text += f"🎫 #{ticket} — {uname} (ID: {uid})\n"
                 if kick_uname:
@@ -467,7 +467,7 @@ def callback_handler(call):
         if valid:
             winner = random.choice(valid)
             extra = f"\n⚠️ Исключены за отписку: {', '.join(removed)}" if removed else ""
-            text = f"""🎉 ПОБЕДИТЕЛЬ РОЗЫГРЫША! 🎉
+            text = f"""🎉 ПОБЕДИТЕЛЬ КОНКУРСА! 🎉
 
 🏆 {winner[1]} (ID: {winner[0]})
 💰 Получает 5000 рублей!
@@ -502,7 +502,7 @@ def check_tasks_cmd(message):
         c.execute("UPDATE users SET joined=1 WHERE user_id=%s", (user_id,))
         conn.commit()
         conn.close()
-        bot.reply_to(message, "✅ Все задания выполнены! Вы участвуете в розыгрыше!")
+        bot.reply_to(message, "✅ Все задания выполнены! Вы участвуете в конкурсе!")
     else:
         missing = []
         if not tg_done:
@@ -526,7 +526,7 @@ def show_participants(message):
     participants = c.fetchall()
     conn.close()
     if participants:
-        text = "📋 УЧАСТНИКИ РОЗЫГРЫША:\n\n"
+        text = "📋 УЧАСТНИКИ КОНКУРСА:\n\n"
         for uid, uname, kick_uname, vk_link, ticket in participants:
             text += f"🎫 #{ticket} — {uname} (ID: {uid})\n"
             if kick_uname:
@@ -582,7 +582,7 @@ def admin_panel(message):
 
 def setup_commands():
     user_commands = [
-        types.BotCommand("/start", "Участвовать в розыгрыше"),
+        types.BotCommand("/start", "Участвовать в конкурсе"),
         types.BotCommand("/check", "Проверить выполнение заданий"),
     ]
     admin_commands = user_commands + [
